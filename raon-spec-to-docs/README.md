@@ -1,6 +1,6 @@
 # raon-spec-to-docs
 
-앱·웹사이트 아이디어를 **질문지(선택지)로 하나씩 결정**하면서 구체화하고, 기획부터 출시 준비까지 **확정 사양 문서**를 `docs/` 폴더에 단계별로 정리하는 Claude Code 스킬입니다.
+앱·웹사이트 아이디어를 **질문지(선택지)로 하나씩 결정**하면서 구체화하고, 기획부터 출시 준비까지 **확정 사양 문서**를 `docs/` 폴더에 단계별로 정리하는 AI 에이전트 스킬입니다. Claude Code·Codex·Cursor에서 같이 쓸 수 있습니다.
 
 만든 사람: **u.kim (Raon)** · u.kim@raon.co.jp
 
@@ -34,23 +34,50 @@ docs/
 
 필요 없는 파일은 만들지 않습니다. (예: 외부 데이터 갱신이 없으면 `data-sync.md` 생략)
 
+## 지원 도구
+
+`SKILL.md` 형식을 읽는 AI 코딩 도구라면 사용할 수 있어요. 질문지 기능이 없는 도구에서는 번호 선택지(`1-A, 2-B`)로 묻는 텍스트 질문지로 대신해요.
+
+| 도구 | 질문지 | 부르는 법 |
+|---|---|---|
+| Claude Code | `AskUserQuestion` | `/raon-spec-to-docs` |
+| Codex (CLI·IDE) | `request_user_input` (꺼져 있으면 텍스트 질문지) | `$raon-spec-to-docs` 또는 `/skills` |
+| Cursor | `AskQuestion` | `/raon-spec-to-docs` |
+
+세 도구 모두 설명(description)을 보고 상황에 맞으면 스킬을 자동으로 고르기도 해요.
+
 ## 설치
 
-이 폴더를 Claude Code 스킬 위치에 복사합니다.
+**한 곳에 두고 세 도구에서 같이 쓰기 (추천)**
 
 ```bash
-# 모든 프로젝트에서 사용
-cp -R raon-spec-to-docs ~/.claude/skills/
+# Codex·Cursor 공용 위치에 설치
+mkdir -p ~/.agents/skills
+cp -R raon-spec-to-docs ~/.agents/skills/
 
-# 특정 프로젝트에서만 사용
-cp -R raon-spec-to-docs <프로젝트>/.claude/skills/
+# Claude Code는 ~/.claude/skills 를 읽으므로 링크 연결
+mkdir -p ~/.claude/skills
+ln -s ~/.agents/skills/raon-spec-to-docs ~/.claude/skills/raon-spec-to-docs
 ```
+
+**도구별 위치**
+
+| 도구 | 사용자 전체 | 특정 프로젝트만 |
+|---|---|---|
+| Claude Code | `~/.claude/skills/` | `<프로젝트>/.claude/skills/` |
+| Codex | `~/.agents/skills/` | `<프로젝트>/.agents/skills/` |
+| Cursor | `~/.agents/skills/` 또는 `~/.cursor/skills/` | `<프로젝트>/.agents/skills/` 또는 `.cursor/skills/` |
+
+Cursor는 `.claude/skills/`, `.codex/skills/`도 함께 읽어요. 그래서 위 추천 방식으로 설치하면 Cursor 목록에 같은 스킬이 두 번 보일 수 있어요. 그럴 때는 하나만 남기면 돼요.
+
+참고: [Codex Agent Skills](https://learn.chatgpt.com/docs/build-skills) · [Cursor Agent Skills](https://cursor.com/docs/skills) (2026-10 확인)
 
 ## 사용 예시
 
-**슬래시 명령으로 시작**
+**스킬 이름으로 시작**
 ```
-/raon-spec-to-docs
+/raon-spec-to-docs        # Claude Code, Cursor
+$raon-spec-to-docs        # Codex
 ```
 
 **자연어로 시작**
