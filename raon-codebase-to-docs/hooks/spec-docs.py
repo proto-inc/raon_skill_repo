@@ -18,6 +18,7 @@ SKIP_PREFIXES = (
 )
 SKIP_EXACT = {
     ".cursor/hooks.json",
+    ".codex/hooks.json",
     ".claude/settings.json",
     ".DS_Store",
 }
@@ -93,6 +94,8 @@ def main():
     if payload.get("status", "completed") != "completed":
         stop()
     if int(payload.get("loop_count") or 0) >= 1:
+        stop()
+    if payload.get("stop_hook_active"):  # Claude Code's loop guard
         stop()
     if git_bytes("rev-parse", "--is-inside-work-tree").strip() != b"true":
         stop()
